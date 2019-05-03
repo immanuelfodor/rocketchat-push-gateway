@@ -1,0 +1,21 @@
+# Apprise configuration used connecting to Gotify
+# For development help, @see:
+#  - https://pypi.org/project/apprise/
+#  - https://github.com/caronc/apprise/wiki/config
+#  - https://github.com/caronc/apprise/wiki/config_yaml
+version: 1
+
+# Define the URL(s) of your user(s) Gotify app(s) and their tag(s).
+# You can define multiple URLs corresponding to different users' Gotify apps,
+#   and then connect them with their RC push tokens as tags. 
+# You can think of it as if they are subscribing to their own notifications.
+# If a user has multiple push tokens, which means they are logged in with
+#   multiple RC apps, only add one to avoid duplicated notifications.
+# At least one URL with the tag push-gw-admin is needed for testing.
+# To find help on the proper URL format, @see:
+#  - https://github.com/caronc/apprise/wiki/Notify_gotify
+urls:
+  - gotify://hostname/my-rANd0m-APp-tOkEN:
+    - tag: push-gw-admin, myuser-vERy-l0nG-rAnd0M-PuSH-tOKen
+  - gotify://ip:port/otheruser-rANd0m-APp-tOkEN:
+    - tag: otheruser-vERy-l0nG-rAnd0M-PuSH-tOKen

@@ -1,0 +1,4 @@
+gunicorn
+Flask
+urllib3==1.24.2  # requests 2.21.0 has requirement urllib3<1.25,>=1.21.1
+apprise

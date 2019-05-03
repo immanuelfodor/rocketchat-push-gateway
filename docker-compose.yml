@@ -1,0 +1,12 @@
+# @see: https://devhints.io/docker-compose
+version: "3"
+services:
+  rc-push-gw:
+    build: .
+    image: rc-push-gw:latest
+    container_name: rc-push-gw
+    ports:
+     - "10088:5000"
+    environment:
+     - LOG_LEVEL=info
+    restart: unless-stopped
