@@ -1,6 +1,6 @@
 # RocketChat Push Gateway
 
-A push gateway for [RocketChat](https://github.com/RocketChat) to send notifications through [Gotify](https://github.com/gotify), a self-hosted push notification service. It is possible to route notifications to any service [Apprise](https://github.com/caronc/apprise) supports, but the project targets Gotify mainly as an open-source [FCM](https://rocket.chat/docs/administrator-guides/notifications/push-notifications/) alternative.
+A push gateway for [RocketChat](https://github.com/RocketChat) to send notifications through [Gotify](https://github.com/gotify), a self-hosted push notification service. It is possible to route notifications to any service [Apprise](https://github.com/caronc/apprise) supports, but the project targets Gotify mainly as an open-source [FCM](https://rocket.chat/docs/administrator-guides/notifications/push-notifications/) alternative. **Note**: The Gotify client app is only available for Android at the time of writing ([Google Play](https://play.google.com/store/apps/details?id=com.github.gotify), [F-Droid](https://f-droid.org/de/packages/com.github.gotify/), [APK](https://github.com/gotify/android/releases/latest)).
 
 If you set this gateway up as your RocketChat push gateway, all the push notifications will be handled by it, no exception. All your users have to trust you with their notifications, and everyone should be hardcoded in the configs, so this gateway is targeted to home users or small teams rather than huge communities growing fast. This limitation is known, but for a couple of users, this should be fine.
 
@@ -10,6 +10,8 @@ If you set this gateway up as your RocketChat push gateway, all the push notific
 - [Configuration](#configuration)
   - [Getting a Gotify URL](#getting-a-gotify-url)
   - [Getting a RocketChat push token](#getting-a-rocketchat-push-token)
+    - [Quick 'n' dirty manual way](#quick-n-dirty-manual-way)
+    - [Using the provided aggregation](#using-the-provided-aggregation)
   - [Apprise config](#apprise-config)
 - [Usage](#usage)
   - [Build & run](#build--run)
@@ -55,7 +57,13 @@ This method is the same for any of the other users that you wish to handle. Ever
 
 ### Getting a RocketChat push token
 
-We can get your unique RocketChat push token from its MongoDB. You might need to authenticate against the `admin` DB if your mongo user resides there, but the commands are like the following:
+We can get your unique RocketChat push token from its MongoDB. You might need to authenticate against the `admin` DB if your mongo user resides there, but the commands are like the following.
+
+#### Quick 'n' dirty manual way
+
+Note the `vERy-l0nG-rAnd0M-PuSH-tOKen` at the end. This token is your unique push identifier, and we'll use it as a subscription to a Gotify app.
+
+You can query other users' push tokens as well by substituting their `USERNAME`. If somebody has more than one, it means they are logged in to multiple RocketChat apps. You can use any of them until they log out of that app (and so the token is removed), no need to add more than one to anyone in the config.
 
 ```bash
 mongo -u ROCKETUSER --authenticationDatabase rocketchat -p
@@ -69,9 +77,26 @@ mongo -u ROCKETUSER --authenticationDatabase rocketchat -p
 > exit
 ```
 
-Note the `vERy-l0nG-rAnd0M-PuSH-tOKen` at the end. This token is your unique push identifier, and we'll use it as a subscription to a Gotify app.
+#### Using the provided aggregation
 
-You can query other users' push tokens as well by substituting their `USERNAME`. If somebody has more than one, it means they are logged in to multiple RocketChat apps. You can use any of them until they log out of that app (and so the token is removed), no need to add more than one to anyone in the config.
+The included `mongo-select-tokens.js` file contains a complex MongoDB query to get one enabled Google push token from all active non-bot users. You can use the output of the query later in the next step of the config process. If your MongoDB is only available on `localhost`, you need to copy the JS file to your Mongo host.
+
+```bash
+mongo --quiet --authenticationDatabase rocketchat -p -u ROCKETUSER localhost:27017/rocketchat mongo-select-tokens.js
+# enter password
+# [
+#   {
+#     "uid" : "my-RanD0m-UsERid",
+#     "uname" : "myusername",
+#     "token" : "myuser-vERy-l0nG-rAnd0M-PuSH-tOKen"
+#   },
+#   {
+#     "uid" : "otheruser-RanD0m-UsERid",
+#     "uname" : "otherusername",
+#     "token" : "otheruser-vERy-l0nG-rAnd0M-PuSH-tOKen"
+#   }
+# ]
+```
 
 ### Apprise config
 
