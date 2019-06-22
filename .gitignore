@@ -103,3 +103,4 @@ ENV/
 
 # ---> Our application
 apprise-config.yml
+docker-compose.override.yml
