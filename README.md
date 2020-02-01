@@ -192,6 +192,8 @@ Then set up the allocated random URL as your RocketChat push notification gatewa
 
 Tested with Gotify as push notification destination, but in theory, it should work with any service [Apprise](https://github.com/caronc/apprise) supports.
 
+If you use XMPP, there is a similar project for that protocol here: [immanuelfodor/xmpp-muc-message-gateway](https://github.com/immanuelfodor/xmpp-muc-message-gateway)
+
 ## Contact
 
 Immánuel Fodor    
