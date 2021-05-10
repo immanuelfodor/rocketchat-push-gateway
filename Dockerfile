@@ -1,5 +1,7 @@
 FROM python:3-alpine
 
+RUN apk add --no-cache gcc musl-dev libffi-dev openssl-dev rust cargo
+
 WORKDIR /usr/src/app
 
 COPY requirements.txt ./
